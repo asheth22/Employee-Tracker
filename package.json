@@ -20,6 +20,8 @@
   "dependencies": {
     "console.table": "^0.10.0",
     "inquirer": "^7.3.3",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "underscore": "^1.12.0",
+    "underscore-node": "^0.1.2"
   }
 }
