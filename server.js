@@ -52,6 +52,19 @@ const userAction = () =>
   ]);
 
  
+function pluck(ArrayOb, prop) {
+  console.log("inside pluck")
+  const ArrayObVal = Object.values(ArrayOb); 
+  // const numProp = (Object.values(ArrayOb[0])).length  
+  // console.log(numProp)
+  const numProp = ArrayObVal[0].length  
+  console.log(numProp);
+  const newArray = [];  
+ 
+  ArrayObVal.forEach(element => newArray.push(element[prop]));
+  console.log(newArray);
+  return newArray
+  }
 async function getAllDepartments() {
   return new Promise(function (resolve, reject) {
     
@@ -68,15 +81,18 @@ async function getAllDepartments() {
  
 }
 async function getAllRoles() {
+ 
   return new Promise(function (resolve, reject) {
-  connection.query("SELECT role.id, role.title, role.salary FROM role ORDER BY role.id;",
+  connection.query("SELECT role.id, role.title, role.salary, role.dept_id FROM role ORDER BY role.id;",
     function (err, res) {
-      if (err) throw err      
+      if (err) throw err    
+    
       for (i = 0; i < res.length; i++) {
         roles.push(res[i]);
       }      
      resolve(res); 
     })
+
   }) 
   
 }
@@ -94,43 +110,7 @@ async function getAllEmployees() {
   })    
 }
 
-async function vewEmployeesByManager() {
-  return new Promise(function (resolve, reject) {
-    connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.dept_name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.dept_id left join employee e on employee.manager_id = e.id;",   
-    function (err, res) {
-      if (err) throw err
-      for (i = 0; i < res.length; i++) {
-        employeesByManager.push(res[i]);
-      }   
-      resolve(res);  
-    })
-  })    
-}
-async function addRole(deparment) { 
-  const dept_id = []; 
-  for (i = 0; i < departments.length; i++) {
-    dept_id.push(deparment[i].dept_id); 
-  }
-  inquirer.prompt([
-      {
-        name: "name",
-        type: "input",
-        message: "What is the name of the role you like to add?"
-      }
-  ]).then(function(res) {
-      var query = connection.query(
-          "INSERT INTO department SET ? ",
-          {
-            dept_name: res.name          
-          },
-          function(err) {
-              if (err) throw err
-            console.table(res);
-            init(); 
-          }
-      )
-  })
-}
+
 async function addDepartment() { 
   inquirer.prompt([
       {
@@ -154,11 +134,10 @@ async function addDepartment() {
 }
 
 async function deleteDepartment(departments) { 
-  
-  let dept = [];
-  for (i = 0; i < departments.length; i++) {
-    dept.push(departments[i].dept_name);
-  }
+  let dept = pluck(departments, 'dept_name')
+ 
+  console.log("From Pluck: ")
+  console.log(dept);
   inquirer.prompt([
       {
         name: "name",
@@ -182,7 +161,15 @@ async function deleteDepartment(departments) {
   })
 }
 
-async function addRole(dept, deptOb) { 
+async function addRole(departments) { 
+  const dept = pluck(departments, "dept_name");
+  const deptID = pluck(departments, "id"); 
+  const depts = []
+  for (i = 0; i < deptID.length; i++) {
+    depts.push(deptID[i] + "," + dept[i]); 
+  }
+ console.log(depts)
+
   inquirer.prompt([
       {
         name: "title",
@@ -195,18 +182,23 @@ async function addRole(dept, deptOb) {
       message: "What is the salary of the role you would like to add?"
     },
     {
-      name: "dept_id",
+      name: "dept",
       type: "list",
       message: "Select the Department ID for the role?",
-      choices: Object.keys(deptOb), 
+      choices: depts, 
     },
-  ]).then(function(res) {
+  ]).then(function (res) {
+    
+    console.log(typeof(String(res.dept)));
+    console.log(res.dept); 
+    const resArray = String(res.dept).split(',');
+    console.log(resArray); 
       var query = connection.query(
           "INSERT INTO role SET ? ",
           {
             title: res.title,
             salary: res.salary,
-            dept_id: res.dept_id
+            dept_id: parseInt(resArray[0])
           },
           function(err) {
               if (err) throw err
@@ -217,10 +209,10 @@ async function addRole(dept, deptOb) {
   })
 }
 async function deleteRole(roles) { 
-  const role_title = []; 
-  for (i = 0; i < roles.length; i++) {
-    role_title.push(roles[i].title); 
-  }
+  const role_title = pluck(roles, 'title') 
+  // for (i = 0; i < roles.length; i++) {
+  //   role_title.push(roles[i].title); 
+  // }
   inquirer.prompt([
       {
         name: "role",
@@ -313,7 +305,38 @@ async function deleteEmployee(employees) {
    
   })
 }
-
+async function vewEmployeesByManager() {
+  return new Promise(function (resolve, reject) {
+      
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.dept_name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.dept_id left join employee e on employee.manager_id = e.id;",   
+    function (err, res) {
+      if (err) throw err
+      for (i = 0; i < res.length; i++) {
+        employeesByManager.push(res[i]);
+      }   
+      resolve(res);  
+    })
+  })    
+}
+async function updateEmployeeManager(employeesByManager) {
+  return new Promise(function (resolve, reject) {
+    console.log("UpdateEmployeeManager"); 
+    let employeeInfo = employeesByManager; 
+    // delete employeeInfo.salary;
+    // console.table(employeeInfo);
+    console.log("type of employeeinfo: ", typeof(Object.entries(employeeInfo[0])));
+    employeeInfo.forEach(element => delete element.salary); 
+    // console.table(employeeInfo);
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.dept_name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.dept_id left join employee e on employee.manager_id = e.id;",   
+    function (err, res) {
+      if (err) throw err
+      for (i = 0; i < res.length; i++) {
+        employeesByManager.push(res[i]);
+      }   
+      resolve(res);  
+    })
+  })    
+}
 async function init() {
   console.log("Employee Tracker Management");
   console.log("******************************************************")
@@ -325,16 +348,17 @@ async function init() {
     switch (action.action) {
       case "View All Departments":
         await getAllDepartments();
-        console.table(departments);     
-        console.log(_.pluck(departments, 'id')); 
-        console.log(deptOb); 
+        pluck(departments)
+        console.table(departments);            
         break;
       case "View All Roles":
         await getAllRoles();
+        pluck(roles)
         console.table(roles); 
         break;
       case "View All Employees":
         await getAllEmployees();
+        pluck(employees); 
         console.table(employees); 
         break;
       case "Add Department":
@@ -342,14 +366,15 @@ async function init() {
         break;
       case "Add Role":
         await getAllDepartments();   
-        deptOb = Object.values(departments);
-        addRole(dept, deptOb);
+        // deptOb = Object.values(departments);
+        await addRole(departments);
         break;
       case "Add Employee":
         await addEmployee();
         break;      
       case "Delete a Department":
-        await getAllDepartments();        
+        await getAllDepartments(); 
+        await deleteDepartment(departments);        
         break;
       case "Delete a Role":
         await getAllRoles();
@@ -361,7 +386,8 @@ async function init() {
         await deleteEmployee(employees);
         break;
       case "Update employee's manager":
-        updateEmployeeManager();
+        await vewEmployeesByManager();
+        await updateEmployeeManager(employeesByManager);
         break;
       case "View employees by manager":
         await vewEmployeesByManager();
@@ -371,7 +397,7 @@ async function init() {
         viewBudget();
         break;
     }
-
+    // init(); 
     connection.end;
   } catch (err) {
     console.log(err);
