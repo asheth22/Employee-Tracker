@@ -36,13 +36,13 @@ const userAction = () =>
       choices: [
         "Add Department",
         "Add Role",
-        "Add Employee?",
+        "Add Employee",
         "View All Departments",
         "View All Roles",
         "View All Employees",
         "Delete a Department",
         "Delete a Role",
-        "Delete an Employe",
+        "Delete an Employee",
         "Update employee's manager",
         "View employees by manager",
         "View the total utilized budget of a department",
@@ -217,39 +217,102 @@ async function addRole(dept, deptOb) {
   })
 }
 async function deleteRole(roles) { 
-  console.log(roles.title); 
+  const role_title = []; 
+  for (i = 0; i < roles.length; i++) {
+    role_title.push(roles[i].title); 
+  }
   inquirer.prompt([
       {
-        name: "name",
+        name: "role",
         type: "list",
         message: "Select the role you would like to delete",
-      choices: Object.entries(roles),
+      choices: role_title
       }
   ]).then(function (res) {
     console.log("selected role to delete: ", res)
-    // const query = connection.query(
-    //   "DELETE FROM role WHERE ?",
-    //   {
-    //     dept_name: res.name
-    //   },
-    //   function(err, res) {
-    //     console.log("Department deleted");
-    //     init(); 
-    //   }
-    // ); 
+    const query = connection.query(
+      "DELETE FROM role WHERE ?",
+      {
+        title: res.role
+      },
+      function(err, res) {
+        console.log("rolet deleted");
+        init(); 
+      }
+    ); 
    
   })
 }
-
-// async function vewEmployeeByManager() {
-//   connection.query("SELECT employee.id, employee.first_name, employee.last_name, department.dept_name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.dept_id = department.id ORDER BY employee.id;", 
-//     function (err, res) {
-//       if (err) reject(err)       
-//       console.table(res);    
-//       // resolve(res);       
-//     })
-//   }
-
+async function addEmployee() { 
+  inquirer.prompt([
+      {
+        name: "first_name",
+        type: "input",
+        message: "What is the tfirst name of the employee you wouldlike to add?"
+    },
+    {
+      name: "last_name",
+      type: "input",
+      message: "What is the last name of the employee you wouldlike to add?"
+    },
+    {
+      name: "manager_id",
+      type: "input",
+      message: "What is the employee ID of the manager",      
+    },
+    {
+      name: "role_id",
+      type: "input",
+      message: "What is role_id of the employeer",      
+    },
+  ]).then(function(res) {
+      var query = connection.query(
+          "INSERT INTO employee SET ? ",
+          {
+            first_name: res.first_name,
+            last_name: res.last_name,
+            manager_id: res.manager_id,
+            role_id: res.role_id
+          },
+          function(err) {
+              if (err) throw err
+            console.table(res);
+            init(); 
+          }
+      )
+  })
+}
+async function deleteEmployee(employees) { 
+  console.table(employees); 
+  const employeesOb = Object.values(employees); 
+  console.log(employeesOb); 
+  const employeeID  = []; 
+  for (i = 0; i < employeesOb.length; i++) {
+    employeeID.push(employeesOb[i].id); 
+  }
+  console.log(employeeID);
+  inquirer.prompt([
+      {
+        name: "id",
+        type: "list",
+        message: "Select the id of the employee to like to delete",
+      choices: employeeID
+      }
+  ]).then(function (res) {
+    console.log("selected ID to delete: ", res)
+    const query = connection.query(
+      "DELETE FROM employee WHERE ?",
+      {
+        id: res.id
+      },
+      function(err, res) {
+        console.log("employee deleted");
+        init(); 
+      }
+    ); 
+   
+  })
+}
 
 async function init() {
   console.log("Employee Tracker Management");
@@ -265,7 +328,6 @@ async function init() {
         console.table(departments);     
         console.log(_.pluck(departments, 'id')); 
         console.log(deptOb); 
-
         break;
       case "View All Roles":
         await getAllRoles();
@@ -284,19 +346,19 @@ async function init() {
         addRole(dept, deptOb);
         break;
       case "Add Employee":
-        addEmployee();
+        await addEmployee();
         break;      
       case "Delete a Department":
         await getAllDepartments();        
-       await deleteDepartment(departments);
-        
         break;
       case "Delete a Role":
         await getAllRoles();
         deleteRole(roles);
         break;
-      case "Delete an Employe":
-        deleteEmployee();
+      case "Delete an Employee":
+        await getAllEmployees();
+        
+        await deleteEmployee(employees);
         break;
       case "Update employee's manager":
         updateEmployeeManager();
