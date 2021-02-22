@@ -7,8 +7,6 @@ const { type } = require("os");
 const { Console } = require("console");
 const employeesByManager = []; 
 let departments = [];
-let dept = []; 
-let deptOb = []; 
 let roles = [];
 let employees = []; 
 
@@ -64,18 +62,23 @@ function pluck(ArrayOb, prop) {
   ArrayObVal.forEach(element => newArray.push(element[prop]));
   console.log(newArray);
   return newArray
-  }
+}
+let deptName = []; 
 async function getAllDepartments() {
   return new Promise(function (resolve, reject) {
     
   connection.query("SELECT department.id, department.dept_name FROM department ORDER BY department.id;",
     function (err, res) {
       if (err) reject(err)       
-      for (i = 0; i < res.length; i++) {
-        departments.push(res[i]);
+     // for (i = 0; i < res.length; i++) {
+     //   departments.push(res[i]);
         // dept.push(res[i].dept_name); 
-      }      
-      resolve(res);       
+    //  }     
+     // resolve(res);   
+     deptName = res.map((dept) => (
+        { name: dept.dept_name }
+      ))
+      console.log(deptName)
     })
   })  
  
@@ -337,6 +340,13 @@ async function updateEmployeeManager(employeesByManager) {
     })
   })    
 }
+async function viewBudget(employeesByManager) {
+  let totalSalary = 0;
+  const arr = employeesByManager.filter(em =>  em.dept_name == "Sales")
+  arr.forEach(e => totalSalary += e.salary)
+  console.log(arr)
+  console.log(totalSalary)
+}
 async function init() {
   console.log("Employee Tracker Management");
   console.log("******************************************************")
@@ -394,7 +404,8 @@ async function init() {
         console.table(employeesByManager);
         break;
       case "View the total utilized budget of a department":
-        viewBudget();
+       await vewEmployeesByManager();
+        await viewBudget(employeesByManager);
         break;
     }
     // init(); 
