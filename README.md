@@ -1,6 +1,6 @@
 # Employee-Tracker
 
-This is node.js command line application that for managing a company's employees using node, inquirer, and MySQL.The application uses employee_trackerdb with three tables: department, role, and employee for storing data. 
+This is node.js command line application designed for managing a company's employees using node, inquirer, and MySQL.The application uses employee_trackerdb with three tables: department, role, and employee for storing data. 
 
 ## Application Features
 ```
@@ -17,10 +17,9 @@ Once the application is initialized through the command line. The application:
 
 ```
 ## Mock-up
-
-Demo of the application [Add-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/AddFunctions.gif
-Demo of the application [Delete-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/DeleteFunctions.gif
-Demo of the application [View-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/ViewFunctions.gif
-Demo of the application [Bonus-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/BonusFunctions.gif
-)
-
+```
+Demo of the application [Add-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/AddFunctions.gif)
+Demo of the application [Delete-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/DeleteFunctions.gif)
+Demo of the application [View-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/ViewFunctions.gif)
+Demo of the application [Bonus-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/BonusFunctions.gif)
+```

@@ -165,7 +165,7 @@ async function addRole(departments) {
     const depts = []
     for (i = 0; i < deptID.length; i++) {
       depts.push(deptID[i] + "," + dept[i]);
-    }    
+    }
     inquirer.prompt([
       {
         name: "title",
@@ -205,7 +205,7 @@ async function addRole(departments) {
     })
   })
 }
-// function to delete role
+// Function to delete role
 async function deleteRole(roles) {
   return new Promise(function (resolve, reject) {
     const role_title = pluck(roles, 'title')
@@ -232,7 +232,7 @@ async function deleteRole(roles) {
     })
   })
 }
-// function to add an employee
+// Function to add an employee
 async function addEmployee(roles, employees) {
   return new Promise(function (resolve, reject) {
     roleID = pluck(roles, "id")
@@ -289,7 +289,7 @@ async function addEmployee(roles, employees) {
     })
   })
 }
-// function to delete an employee
+// Function to delete an employee
 async function deleteEmployee(employees) {
   return new Promise(function (resolve, reject) {
     employeeArr = [];
@@ -299,7 +299,7 @@ async function deleteEmployee(employees) {
         name: "id",
         type: "list",
         message: "Select the employee to like to delete",
-        loop: false, 
+        loop: false,
         choices: employeeArr,
       }
     ]).then(function (res) {
@@ -318,7 +318,7 @@ async function deleteEmployee(employees) {
     })
   })
 }
-// function to view employees by Manager
+// Function to view employees by Manager
 async function vewEmployeesByManager() {
   return new Promise(function (resolve, reject) {
 
@@ -332,10 +332,10 @@ async function vewEmployeesByManager() {
       })
   })
 }
-// function to update employee's role
+// Function to update employee's role
 async function updateEmployeeRole(employeesByManager, roles) {
   return new Promise(function (resolve, reject) {
-    employeeArr = [];    
+    employeeArr = [];
     employeesByManager.forEach(e => employeeArr.push(e.id + "," + e.first_name + "," + e.last_name + "," + e.title))
     roleArr = [];
     roles.forEach(r => roleArr.push(r.id + "," + r.title))
@@ -344,20 +344,20 @@ async function updateEmployeeRole(employeesByManager, roles) {
         name: "emp",
         type: "list",
         message: "Select employee to update the role",
-        loop: false, 
+        loop: false,
         choices: employeeArr
       },
       {
         name: "role",
         type: "list",
         message: "Select new role for the employee",
-        loop: false, 
+        loop: false,
         choices: roleArr
       },
     ]).then(function (res) {
       const empArray = String(res.emp).split(',');
       const roleArray = String(res.role).split(',');
-      
+
       connection.query(
         "UPDATE employee SET ? WHERE ?",
         [{
@@ -376,7 +376,7 @@ async function updateEmployeeRole(employeesByManager, roles) {
     })
   })
 }
-// function to update employee's manager
+// Function to update employee's manager
 async function updateEmployeeManager(employeesByManager) {
   return new Promise(function (resolve, reject) {
     employeeArr = [];
@@ -387,14 +387,14 @@ async function updateEmployeeManager(employeesByManager) {
         name: "emp",
         type: "list",
         message: "Select employee to update the manager",
-        loop: false, 
+        loop: false,
         choices: employeeArr
       },
       {
         name: "mgr",
         type: "list",
         message: "Select name of new manager",
-        loop: false, 
+        loop: false,
         choices: employeeArr
       },
     ]).then(function (res) {
@@ -420,7 +420,7 @@ async function updateEmployeeManager(employeesByManager) {
     })
   })
 }
-// function to view budget by department
+// Function to view budget by department
 async function viewBudget(departments, employeesByManager) {
   return new Promise(function (resolve, reject) {
     const dept = pluck(departments, 'dept_name')
@@ -442,13 +442,13 @@ async function viewBudget(departments, employeesByManager) {
 }
 // App Initialization
 async function init() {
-  console.log("Employee Tracker Management");
+  console.log("Employee Management System");
   console.log("******************************************************")
-  // calling functions based on selected user action 
+  //Calling functions based on selected user action 
 
   try {
     const action = await userAction();
-    console.log("user chose: ", action.action);
+    console.log("User Chose: ", action.action);
     switch (action.action) {
       case "View All Departments":
         await getAllDepartments();
@@ -499,11 +499,11 @@ async function init() {
         console.table(employeesByManager);
         await init();
         break;
-        case "Update employee's role":
+      case "Update employee's role":
         await vewEmployeesByManager();
         await getAllRoles();
-          await updateEmployeeRole(employeesByManager, roles);
-          break;
+        await updateEmployeeRole(employeesByManager, roles);
+        break;
       case "Update employee's manager":
         await vewEmployeesByManager();
         await updateEmployeeManager(employeesByManager);
