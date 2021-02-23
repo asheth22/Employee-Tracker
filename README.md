@@ -18,5 +18,9 @@ Once the application is initialized through the command line. The application:
 ```
 ## Mock-up
 
-Demo of the application [Team-Profile](https://github.com/asheth22/Team-Profile-Generator/blob/main/assets/teamprofile.gif)
+Demo of the application [Add-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/AddFunctions.gif
+Demo of the application [Delete-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/DeleteFunctions.gif
+Demo of the application [View-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/ViewFunctions.gif
+Demo of the application [Bonus-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/BonusFunctions.gif
+)
 

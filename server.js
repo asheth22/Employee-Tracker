@@ -393,7 +393,7 @@ async function updateEmployeeManager(employeesByManager) {
       {
         name: "mgr",
         type: "list",
-        message: "Select name of new managerr",
+        message: "Select name of new manager",
         loop: false, 
         choices: employeeArr
       },
