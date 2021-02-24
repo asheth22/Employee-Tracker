@@ -271,7 +271,7 @@ async function addEmployee(roles, employees) {
       },
     ]).then(function (res) {
       const manArray = String(res.manager).split(',');
-      const rolArray = String(res.manager).split(',');
+      const rolArray = String(res.role).split(',');
       var query = connection.query(
         "INSERT INTO employee SET ? ",
         {
@@ -322,7 +322,7 @@ async function deleteEmployee(employees) {
 async function vewEmployeesByManager() {
   return new Promise(function (resolve, reject) {
 
-    connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.dept_name, employee.manager_id, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.dept_id left join employee e on employee.manager_id = e.id;",
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.dept_name, employee.manager_id, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.dept_id left join employee e on employee.manager_id = e.id ORDER BY employee.manager_id;",
       function (err, res) {
         if (err) throw err
         for (i = 0; i < res.length; i++) {
