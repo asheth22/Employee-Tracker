@@ -20,5 +20,5 @@ Once the application is initialized through the command line. The application:
 ```
 ## Mock-up
 
-Demo of the application [Employee_Tracker](]https://github.com/asheth22/Employee-Tracker/blob/main/demo/Employee_Tracker.gif)
+Demo of the application [Employee_Tracker](https://github.com/asheth22/Employee-Tracker/blob/main/demo/Employee_Tracker.gif)
 
