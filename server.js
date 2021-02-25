@@ -248,7 +248,7 @@ async function addEmployee(roles, employees) {
       {
         name: "first_name",
         type: "input",
-        message: "What is the tfirst name of the employee you wouldlike to add?"
+        message: "What is the first name of the employee you wouldlike to add?"
       },
       {
         name: "last_name",

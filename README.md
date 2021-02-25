@@ -20,8 +20,6 @@ Once the application is initialized through the command line. The application:
 ```
 ## Mock-up
 ```
-Demo of the application [Add-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/AddFunctions.gif)
-Demo of the application [Delete-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/DeleteFunctions.gif)
-Demo of the application [View-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/ViewFunctions.gif)
-Demo of the application [Bonus-Functions](https://github.com/asheth22/Employee-Tracker/blob/main/demo/BonusFunctions.gif)
+Demo of the application [Employee_Tracker](https://github.com/asheth22/Employee-Tracker/blob/main/demo/Employee_Tracker.gif)
+
 ```
